@@ -1,3 +1,4 @@
+import {projectState} from "./project-state"
 export class ProjectInput {
     formElement: HTMLFormElement;
     titleElement: HTMLInputElement;
@@ -27,7 +28,8 @@ export class ProjectInput {
      * add project to the list
      */
     public addProject(): void {
-        
+        projectState.addProject(this.titleElement.value, this.descriptionElement.value, this.peopleElement.value)
+        console.log(projectState.projects)
     }
 
     /**
