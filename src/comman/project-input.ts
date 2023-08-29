@@ -29,7 +29,6 @@ export class ProjectInput {
      */
     public addProject(): void {
         projectState.addProject(this.titleElement.value, this.descriptionElement.value, this.peopleElement.value)
-        console.log(projectState.projects)
     }
 
     /**
