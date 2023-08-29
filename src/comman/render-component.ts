@@ -13,7 +13,7 @@ export class RenderComponent<T extends HTMLElement, U extends HTMLElement> {
     }
 
     /**attch html content to the host element */
-    public attach(): void {
-        this.hostElement.insertAdjacentElement('afterbegin', this.renderElement)
+    public attach(position: InsertPosition): void {
+        this.hostElement.insertAdjacentElement(position, this.renderElement)
     }
 }
