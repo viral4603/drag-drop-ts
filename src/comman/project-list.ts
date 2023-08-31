@@ -8,17 +8,16 @@ export class ProjectList extends RenderComponent<HTMLElement, HTMLTemplateElemen
         super(hostElement, templetElement);
         this.renderElement.id = `${this.type}-projects`
         this.configure()
-
     }
     /**
-     * configure basic elements
+     * configure basic elements 
      */
     public configure(): void {
         this.renderElement.addEventListener('dragover', this.dragOverHandler.bind(this))
         this.renderElement.addEventListener('dragleave', this.dragLeaveHandler.bind(this))
         this.renderElement.addEventListener('drop', this.dropHandler.bind(this))
 
-        projectState.addListner((projects: Project[]) => {
+        projectState.addListener((projects: Project[]) => {
             const filterProject = projects.filter((items: Project) => {
                 if (this.type === 'active') {
                     return items.status === ProjectStatus.Active
@@ -31,32 +30,47 @@ export class ProjectList extends RenderComponent<HTMLElement, HTMLTemplateElemen
             this.renderProject()
         })
     }
-    /** Drag target events */
 
+    /**
+     * add project id to transfer data and allow move effect
+     * @param event drag event 
+     * @param projectId project id that will transfer while dragging
+     */
+    dragStartHandler(event: DragEvent, projectId: string): void {
+        event.dataTransfer!.setData('text/plain', projectId);
+        event.dataTransfer!.effectAllowed = 'move';
+    }
+    /**
+     * remove class from element if drag item will draged out side of it's area
+     * @param _ not going to use default parameter
+     */
+    dragLeaveHandler(_: DragEvent): void {
+        const listElement = this.renderElement.querySelector('ul')!
+        listElement.classList.remove('droppable')
+    }
+    /**
+     * add class to target element in which, list will be drop
+     * @param event drag event 
+     */
     dragOverHandler(event: DragEvent): void {
-        const liElement = this.renderElement.querySelector('ul')!
-        liElement.classList.add('droppable')
-    }
-
-    dropHandler(event: DragEvent): void {
-        throw new Error("Method not implemented.");
-    }
-
-    dragLeaveHandler(event: DragEvent): void {
-        const liElement = this.renderElement.querySelector('ul')!
-        liElement.classList.remove('droppable')
-    }
-
-    /** Drag start events */
-    dragStartHandler(event: DragEvent): void {
-    }
-
-    dragEndHandler(event: DragEvent): void {
-        console.log('drag end', event)
+        if (event.dataTransfer && event.dataTransfer.types[0] === 'text/plain') {
+            event.preventDefault()
+            const liElement = this.renderElement.querySelector('ul')!
+            liElement.classList.add('droppable')
+        }
     }
 
     /**
-     * render content in list 
+     * drop dragble item into target
+     * @param event drag event
+     */
+    dropHandler(event: DragEvent): void {
+        const projectId = event.dataTransfer!.getData('text/plain')
+        projectState.moveProject(projectId, this.type === 'active' ? ProjectStatus.Active : ProjectStatus.Finished)
+    }
+
+    /**
+     * render list content in host element 
      */
     public renderContent() {
         const listId = `${this.type}-projects-list`
@@ -64,26 +78,25 @@ export class ProjectList extends RenderComponent<HTMLElement, HTMLTemplateElemen
         this.renderElement.querySelector('h2')!.textContent = this.type.toUpperCase() + '  PROJECTS'
     }
     /**
-     * render list of project
+     * render list of project in host element
      */
     public renderProject() {
         const elmenet = document.getElementById(`${this.type}-projects-list`);
         elmenet.innerHTML = '';
         for (const project of this.assignProject) {
-            const liElement = document.createElement('li')
+            const listElement = document.createElement('li')
 
-            liElement.innerHTML = `<h2>${project.title}</h2>
-            <p>Person Worked: ${project.people} </p>
+            listElement.innerHTML = `<h2>${project.title}</h2>
+            <p>Person Worked: ${project.people}</p>
             <p>${project.description}</p>`
 
-            liElement.setAttribute('draggable', 'true')
+            listElement.setAttribute('draggable', 'true')
 
-            liElement.addEventListener('dragstart', this.dragStartHandler);
-            liElement.addEventListener('dragend', this.dragEndHandler);
+            listElement.addEventListener('dragstart', (dragStartEvent: DragEvent) => {
+                this.dragStartHandler(dragStartEvent, project.id)
+            });
 
-            elmenet.appendChild(liElement)
+            elmenet.appendChild(listElement)
         }
     }
-
-
 }

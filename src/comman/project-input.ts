@@ -1,4 +1,4 @@
-import {projectState} from "./project-state"
+import { projectState } from "./project-state"
 export class ProjectInput {
     formElement: HTMLFormElement;
     titleElement: HTMLInputElement;
@@ -13,7 +13,7 @@ export class ProjectInput {
         this.configure()
     }
     /**
-     * configure submit event 
+     * add listener to form element
      */
     public configure() {
         this.formElement.addEventListener('submit', (event: SubmitEvent) => {
@@ -25,10 +25,11 @@ export class ProjectInput {
     }
 
     /**
-     * add project to the list
+     * add project to the project List
      */
     public addProject(): void {
         projectState.addProject(this.titleElement.value, this.descriptionElement.value, this.peopleElement.value)
+        this.clearFields()
     }
 
     /**
@@ -45,6 +46,14 @@ export class ProjectInput {
             throw Error('number of people should be more than 1')
         }
         return true
+    }
+    /**
+     * clear forms field after submit form
+     */
+    public clearFields(): void {
+        this.titleElement.value = '';
+        this.descriptionElement.value = '';
+        this.peopleElement.value = '';
     }
 
 }

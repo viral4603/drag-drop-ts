@@ -1,27 +1,15 @@
-enum ProjectStatus {
-    Active,
-    Finished
-}
-class Project {
-    constructor(public id: string,
-        public title: string,
-        public description: string,
-        public people: string | number,
-        public status: ProjectStatus) {
-
-    }
-}
+import { ProjectStatus, Project } from "./model"
 class ProjectState {
     public projects: Project[] = [];
-    public listner: any[] = [];
-    private static instance: ProjectState
-
+    public listner: Function[] = [];
+    private static instance: ProjectState;
+    /** make consturctor private because we want single instace throught whole application */
     private constructor() {
 
     }
 
     /**
-     * get single tone instance of project state
+     * return single tone instace of project state.
      */
     public static getInstance(): ProjectState {
         if (!this.instance) {
@@ -30,25 +18,47 @@ class ProjectState {
         return this.instance
     }
     /**
-     * add project to the project List
+     * add project to project list and update UI.
+     * @param title title of project
+     * @param description decription about project
+     * @param people number of people work in this project
      */
     public addProject(title: string, description: string, people: string) {
         const uniqueId = Math.random().toFixed(10)
         const project = new Project(uniqueId, title, description, people, ProjectStatus.Active)
         this.projects.push(project)
-
-        for (const listnerFunction of this.listner) {
-            listnerFunction(this.projects.slice())
-        }
+        this.updateListener()
     }
 
     /**
-     * add Listner it will invoke while made changes in project list
+     * register listner function that will invoke while change were made in project list.
+     * @param listner listner function 
      */
-    public addListner(listner: Function) {
+    public addListener(listner: Function) {
         this.listner.push(listner)
+    }
+
+    /**
+     * invoke listener function which, registered in listener list
+     */
+    private updateListener() {
+        for (const listenerFunction of this.listner) {
+            listenerFunction(this.projects.slice())
+        }
+    }
+    /**
+     * find draged project and droped into target.
+     * @param projectId project Id of draged project
+     * @param newStatus status of draged project
+     */
+    public moveProject(projectId: string, newStatus: ProjectStatus) {
+        const project = this.projects.find((item: Project) => item.id === projectId)
+        if (project && project.status !== newStatus) {
+            project.status = newStatus
+            this.updateListener()
+        }
     }
 };
 
 const projectState = ProjectState.getInstance()
-export { projectState , ProjectStatus,Project};
+export { projectState, ProjectStatus, Project };

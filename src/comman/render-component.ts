@@ -12,7 +12,10 @@ export class RenderComponent<T extends HTMLElement, U extends HTMLElement> {
         this.renderElement = importedNode.firstElementChild as U;
     }
 
-    /**attch html content to the host element */
+    /**
+     * attach element into host element
+     * @param position where to add new element 
+     */
     public attach(position: InsertPosition): void {
         this.hostElement.insertAdjacentElement(position, this.renderElement)
     }
