@@ -1,4 +1,5 @@
-import { projectState } from "./project-state"
+import { projectState } from "../state/project-state"
+
 export class ProjectInput {
     formElement: HTMLFormElement;
     titleElement: HTMLInputElement;

@@ -1,4 +1,5 @@
-import { ProjectStatus, Project } from "./model"
+import { Project } from "../model/project"
+import { ProjectStatus } from "../util/enum";
 class ProjectState {
     public projects: Project[] = [];
     public listner: Function[] = [];
@@ -60,5 +61,4 @@ class ProjectState {
     }
 };
 
-const projectState = ProjectState.getInstance()
-export { projectState, ProjectStatus, Project };
+export const projectState = ProjectState.getInstance()

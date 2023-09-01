@@ -1,17 +1,17 @@
-import {RenderComponent} from "./comman/render-component"
-import { ProjectInput } from "./comman/project-input"
-import { ProjectList } from "./comman/project-list"
+import { Component } from "./components/render-component"
+import { ProjectInput } from "./components/project-input"
+import { ProjectList } from "./components/project-list"
 /** import style in webpack */
 import "./assets/css/app.css"
 
-const form = new RenderComponent('app','project-input')
+const form = new Component('app', 'project-input')
 form.attach('afterbegin')
-const projectInput = new ProjectInput()
+new ProjectInput()
 
-const activeProjectList = new ProjectList('app','project-list','active')
+const activeProjectList = new ProjectList('app', 'project-list', 'active')
 activeProjectList.attach('beforeend')
 activeProjectList.renderContent()
 
-const finshedProjectList = new ProjectList('app','project-list','finished')
+const finshedProjectList = new ProjectList('app', 'project-list', 'finished')
 finshedProjectList.attach('beforeend')
 finshedProjectList.renderContent()

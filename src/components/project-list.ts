@@ -1,8 +1,10 @@
 
-import { RenderComponent } from "./render-component"
-import { projectState, ProjectStatus, Project } from "./project-state"
-import { DragTarget, Draggable } from "./model"
-export class ProjectList extends RenderComponent<HTMLElement, HTMLTemplateElement> implements Draggable, DragTarget {
+import { Component } from "./render-component"
+import { DragTarget, Draggable } from "../model/drag-drop"
+import { Project } from "../model/project"
+import { projectState } from "../state/project-state"
+import { ProjectStatus } from "../util/enum"
+export class ProjectList extends Component<HTMLElement, HTMLTemplateElement> implements Draggable, DragTarget {
     public assignProject: Project[] = [];
     constructor(hostElement: string, templetElement: string, private type: 'active' | 'finished') {
         super(hostElement, templetElement);

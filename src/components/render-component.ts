@@ -1,4 +1,4 @@
-export class RenderComponent<T extends HTMLElement, U extends HTMLElement> {
+export class Component<T extends HTMLElement, U extends HTMLElement> {
     /** template element that hold html*/
     public templateElement: HTMLTemplateElement;
     /** host elemement that render fragment element */
